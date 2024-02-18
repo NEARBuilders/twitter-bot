@@ -17,3 +17,9 @@ bun run build
 bun run start
 
 ```
+
+# Cross posting Near Social to Twitter
+
+Set the NEAR_ACCOUNT_ID you want to cross post
+
+- [ ] Need to decide how to format and transform near social posts for twitter posts

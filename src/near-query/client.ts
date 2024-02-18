@@ -1,21 +1,17 @@
+import { socialPosts } from './queries';
 import { GraphQLResponse, fetchGraphQL } from "./config";
-import { potlockReceipts } from "./queries";
 
 class NearQuery {
   async fetchContractReceipts({
-    receiver,
-    methodName,
     startBlockHeight,
   }: {
-    receiver: string;
-    methodName: string;
     startBlockHeight: number;
   }): Promise<GraphQLResponse> {
     const { errors, data } = await fetchGraphQL({
-      query: potlockReceipts,
-      hasuraRole: "markeljan_near",
-      operationName: "PotlockReceipts",
-      variables: { receiver, methodName, startBlockHeight },
+      query: socialPosts,
+      hasuraRole: "dataplatform_near",
+      operationName: "IndexerQuery",
+      variables: { accountId: `${process.env.ACCOUNT_ID}`, startBlockHeight },
     });
 
     if (errors) {
@@ -23,7 +19,7 @@ class NearQuery {
     }
 
     try {
-      const parsedData = data.markeljan_near_potlock_actions_v3_receipt.map(parseReceiptData);
+      const parsedData = data.dataplatform_near_feed_moderated_posts.map(parseReceiptData);
       return { data: parsedData };
     } catch (error: any) {
       return { errors: [{ message: `Error parsing args: ${error.message}` }] };
@@ -63,15 +59,25 @@ export const nearQuery = new NearQuery();
 
 // Helper function to parse the receipt data
 function parseReceiptData(receiptData: any) {
+  // Check if receiptData is a string
   try {
-    const parsedArgs = JSON.parse(atob(receiptData.args));
-
-    const parsedEventData = receiptData.raw_event ? JSON.parse(receiptData.raw_event) : {};
-    const eventName = parsedEventData?.event;
-    const parsedEvent = parsedEventData?.data?.length ? parsedEventData.data[0][eventName] : {};
-
-    return { ...receiptData, parsedArgs, parsedEvent };
+    if (typeof receiptData === 'string') {
+      try {
+        // Try parsing the string as JSON
+        const parsedData = JSON.parse(receiptData);
+        return parsedData;
+      } catch (e: any) {
+        throw new Error(`Failed to parse args for data ${JSON.stringify(receiptData)}: ${e.message} `);
+      }
+    } else if (typeof receiptData === 'object' && receiptData !== null) {
+      // If receiptData is already an object, return it directly
+      return receiptData;
+    } else {
+      // If receiptData is neither a string nor an object, handle accordingly
+      throw new Error(`Unsupported type for receiptData: ${typeof receiptData} `);
+    }
   } catch (error: any) {
-    throw new Error(`Failed to parse args for data ${receiptData}: ${error.message}`);
+    throw new Error(`Error parsing receipt data: ${error.message} `);
   }
+
 }
