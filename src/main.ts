@@ -13,7 +13,7 @@ const processBlocks = async () => {
 
     const { tweetMessages, endBlockHeight } = trackPostsResponse ?? { tweetMessages: [], endBlockHeight: 0 };
 
-    // get the end block height from the last processed block height, donation end block height, and status change end block height
+    // get the end block height from the last processed block height and new end block height
     const newProcessedBlockHeight = Math.max(
       endBlockHeight,
       lastProcessedBlockHeight

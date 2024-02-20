@@ -11,7 +11,7 @@ class NearQuery {
       query: socialPosts,
       hasuraRole: "dataplatform_near",
       operationName: "IndexerQuery",
-      variables: { accountId: `${process.env.ACCOUNT_ID}`, startBlockHeight },
+      variables: { accountId: `${process.env.NEAR_ACCOUNT_ID}`, startBlockHeight },
     });
 
     if (errors) {
