@@ -47,16 +47,19 @@ export async function trackPostChanges(startBlockHeight: number): Promise<TrackP
 async function formatTweetMessage(tweetArgs: TweetArgs) {
   const { content } = tweetArgs;
 
-  // how to normalize markdown text into nice format?
-  // should it break into multiple tweets if too long?
-
-  // should it just share a link to it?
-
-  // this should replace @accountIds with twitter handles
-  // const projectTag = await nearQuery.lookupTwitterHandle("efiz.near").then((handle) => handle ?? "efiz.near"); 
-
+  // Initial message formatting from JSON content.
   let message = `${JSON.parse(content).text}`;
-  // need to add support for image posts + markdown links/images
+
+  // TODO:
+  // 1. Normalize markdown text to a more readable format.
+  // 2. Determine if the content should be split into multiple tweets for longer texts.
+  // 3. Consider sharing a link for lengthy contents instead of the full text.
+  // 4. Replace @accountIds with actual Twitter handles.
+  // Example: Replace near account IDs with Twitter handles using a lookup function.
+  // const userTag = await nearQuery.lookupTwitterHandle("efiz.near").then((handle) => handle ?? "efiz.near");
+
+  // Future Enhancements:
+  // - Add support for including images and handling markdown links/images in tweets.
 
   return message;
 }
