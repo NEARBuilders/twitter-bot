@@ -1,3 +1,5 @@
+This is a fork of the [Potlock Twitter Bot](https://github.com/PotLock/twitter-bot).
+
 # How to run
 
 ```bash
