@@ -11,7 +11,7 @@ const processBlocks = async () => {
 
     const trackPostsResponse = (await trackPostChanges(startBlockHeight));
 
-    const { tweetMessages, endBlockHeight } = trackPostsResponse ?? { tweetMessages: [], endBlockHeight: 0 };
+    const { tweetMessages, endBlockHeight } = trackPostsResponse ?? { tweetMessages: [[""]], endBlockHeight: 0 };
 
     // get the end block height from the last processed block height and new end block height
     const newProcessedBlockHeight = Math.max(
